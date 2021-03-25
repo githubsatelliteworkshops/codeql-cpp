@@ -6,13 +6,30 @@ If you are attending this workshop at GitHub Satellite, or watching a recording,
 
 ## Overview
 
-- [Problem statement](#problemstatement)
 - [Setup instructions](#setupinstructions)
+- [Problem statement](#problemstatement)
 - [Workshop](#workshop)
   - [Section 0: Getting started](#section0)
   - [Section 1: Finding references to freed memory](#section1)
   - [Section 2: Finding dereferences](#section2)
   - [Section 3: Finding use-after-free vulnerabilities](#section3)
+
+## Setup instructions for Visual Studio Code <a id="setupinstructions"></a>
+
+To take part in the workshop you will need to set up a CodeQL development environment. See the [Prerequisites section in the README](README.md#mega-prerequisites) for full instructions.
+
+When you have completed setup, you should have:
+
+1. Installed the Visual Studio Code IDE.
+1. Installed the [CodeQL extension for Visual Studio Code](https://help.semmle.com/codeql/codeql-for-vscode.html).
+1. Cloned this repository with `git clone --recursive`.
+1. Opened this repository in VS Code.
+1. Downloaded, imported, and selected the [`example_db`](https://github.com/githubsatelliteworkshops/codeql-cpp/blob/main/example_db.zip) CodeQL database from within VS Code.
+1. A `workshop-queries` folder within your workspace, containing an example query.
+1. A `codeql` folder within your workspace, containing the CodeQL standard libraries for most target languages.
+1. A copy of this `workshop.md` guide in your workspace.
+1. Open the query `workshop-queries/example.ql` and try running it!
+
 
 ## Problem statement <a id="problemstatement"></a>
 
@@ -44,21 +61,6 @@ If the tainted reference is reassigned (e.g. to zero) before it reaches a use, i
 
 In this workshop, we will use CodeQL to analyze a sample of C++ source code that demonstrates simple variants of use-after-free vulnerabilities, and write a CodeQL query to identify the vulnerable pattern with reasonable precision.
 
-## Setup instructions for Visual Studio Code <a id="setupinstructions"></a>
-
-To take part in the workshop you will need to set up a CodeQL development environment. See the [Prerequisites section in the README](README.md#mega-prerequisites) for full instructions.
-
-When you have completed setup, you should have:
-
-1. Installed the Visual Studio Code IDE.
-1. Installed the [CodeQL extension for Visual Studio Code](https://help.semmle.com/codeql/codeql-for-vscode.html).
-1. Cloned this repository with `git clone --recursive`.
-1. Opened this repository in VS Code.
-1. Downloaded, imported, and selected the [`codeql-cpp-workshop-uaf`](https://github.com/githubuniverseworkshops/codeql/releases/download/universe-2020/codeql-cpp-workshop-uaf.zip) CodeQL database from within VS Code.
-1. A `workshop-queries` folder within your workspace, containing an example query.
-1. A `codeql` folder within your workspace, containing the CodeQL standard libraries for most target languages.
-1. A copy of this `workshop.md` guide in your workspace.
-1. Open the query `workshop-queries/example.ql` and try running it!
 
 ## Workshop <a id="workshop"></a>
 
@@ -76,6 +78,18 @@ The rest of the workshop is split into several steps. You can write one query pe
 Each step has a **Hint** that describes useful classes and predicates in the CodeQL standard libraries for C/C++ and keywords in CodeQL.
 
 Each step has a **Solution** that indicates one possible answer. Note that all queries will need to begin with `import cpp` to use the standard libraries, but for simplicity this may be omitted below.
+
+### Plan
+
+  #### Source
+  - [ ] Find all references of `free` function calls in the code
+    - [ ] Find all variables which are freed in the course of the program
+    - [ ] Find all references of variables after they are freed
+  #### Sink
+  - [ ] Find all the variables which are used at any point
+    - Hint: Variables are dereferenced after they are used at any point
+  #### Find Paths
+  - [ ] Wire the results of both of our queries above to find if there's a path between our Source and Sink
 
 ### Finding references to freed memory <a id="section1"></a>
 
